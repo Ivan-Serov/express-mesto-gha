@@ -3,7 +3,6 @@ const { errorMessage } = require('../utils/errorMessage');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .orFail()
     .then((cards) => res.send({ data: cards }))
     .catch((err) => errorMessage(err, req, res));
 };

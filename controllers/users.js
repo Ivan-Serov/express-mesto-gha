@@ -3,13 +3,13 @@ const { errorMessage } = require('../utils/errorMessage');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .orFail()
     .then((users) => res.send({ data: users }))
     .catch((err) => errorMessage(err, req, res));
 };
 
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
+
   User.findById(userId)
     .orFail()
     .then((user) => res.send({ data: user }))
@@ -19,7 +19,6 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -27,6 +26,11 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
+  /* console.log(req.params._id);
+  console.log(req.params.userId);
+  console.log(req.body);
+  console.log(req.user._id); */
+
   User.findByIdAndUpdate(
     userId,
     { name, about },
