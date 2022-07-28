@@ -18,7 +18,6 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    //.orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };
