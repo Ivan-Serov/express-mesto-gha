@@ -9,7 +9,7 @@ module.exports.getCards = (req, res) => {
 
 module.exports.getCard = (req, res) => {
   Card.findById(req.params.cardId)
-    .orFail()
+    .orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -18,13 +18,14 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
+    .orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail()
+    .orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -35,7 +36,7 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail()
+    .orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -46,7 +47,7 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail()
+    .orFail(() => Error('Карточка не найдена'))
     .then((card) => res.send({ data: card }))
     .catch((err) => errorMessage(err, req, res));
 };

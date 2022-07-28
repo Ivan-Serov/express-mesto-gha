@@ -5,6 +5,15 @@ const {
 } = require('./errorNumber');
 
 const errorMessage = (err, req, res) => {
+  console.log(err.name);
+  console.log(err.message);
+
+  if (err.name === 'Error') {
+    res.status(ERR_NOT_FOUND).send({
+      message: err.message,
+    });
+    return;
+  }
   if (err.name === 'DocumentNotFoundError') {
     res.status(ERR_NOT_FOUND).send({
       message: 'Страница не найдена',

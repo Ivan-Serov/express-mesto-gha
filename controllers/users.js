@@ -11,7 +11,7 @@ module.exports.getUser = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .orFail()
+    .orFail(() => Error('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -26,17 +26,13 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
-  /* console.log(req.params._id);
-  console.log(req.params.userId);
-  console.log(req.body);
-  console.log(req.user._id); */
 
   User.findByIdAndUpdate(
     userId,
     { name, about },
     { new: true, runValidators: true },
   )
-    .orFail()
+    .orFail(() => Error('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res));
 };
@@ -45,7 +41,7 @@ module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-    .orFail()
+    .orFail(() => Error('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res));
 };
