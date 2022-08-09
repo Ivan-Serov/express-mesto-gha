@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const validator = require('validator');
 // Опишем схему:
 
 const cardSchema = new mongoose.Schema({
@@ -12,6 +12,12 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validator: (link) => {
+      validator.isURL(link, {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+      });
+    }
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
