@@ -26,18 +26,15 @@ module.exports.getUserMe = (req, res, next) => {
       throw new NotFoundError('Пользователь не найден');
     })
     .then((user) => {
-      ////////////
-      /* res.status(200).send(user); */
       res.send({ data: user });
     })
     .catch((err) => errorMessage(err, req, res, next));
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
-  /* User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => errorMessage(err, req, res)); */
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
