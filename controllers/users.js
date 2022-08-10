@@ -11,13 +11,13 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  const { userId } = req.params;
-
-  User.findById(userId)
+  const { id } = req.params;
+  console.log(req.params);
+  User.findById(id)
     .orFail(() => {
       throw new NotFoundError('Пользователь (ID) не найден');
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => errorMessage(err, req, res, next));
 };
 module.exports.getUserMe = (req, res, next) => {
@@ -27,8 +27,8 @@ module.exports.getUserMe = (req, res, next) => {
     })
     .then((user) => {
       ////////////
-      res.status(200).send(user);
-      /* res.send({ data: user }); */
+      /* res.status(200).send(user); */
+      res.send({ data: user });
     })
     .catch((err) => errorMessage(err, req, res, next));
 };
