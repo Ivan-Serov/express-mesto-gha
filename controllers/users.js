@@ -4,6 +4,8 @@ const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError } = require('../utils/errors/allErrors');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -75,8 +77,8 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь (ID) не найден');
     })
-    /* .then((user) => res.send({ data: user })) */
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
+    /* .then((user) => res.send(user)) */
     .catch((err) => errorMessage(err, req, res, next));
 };
 
@@ -85,9 +87,10 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', {
         expiresIn: '7d',
       });
+      res.status(200).cookie('authorization', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({ message: 'Авторизован' });
       res.send({ jwt: token });
     })
     .catch(next);
