@@ -1,10 +1,22 @@
-const {
+/* const {
   ERR_BAD_REQUEST,
   ERR_NOT_FOUND,
   ERR_SERVER,
-} = require('./errorNumber');
+} = require('./errorNumber'); */
+const { ConflictError, BadRequestError } = require('./errors/allErrors');
 
-const errorMessage = (err, req, res) => {
+const errorMessage = (err, req, res, next) => {
+  if (err.name === 'ValidationError' || err.name === 'CastError') {
+    next(new BadRequestError('Неверный запрос или данные'));
+  }
+  if (err.code === 11000) {
+    next(new ConflictError('Пользователь с таким email уже существует'));
+  }
+  next(err);
+};
+
+module.exports = { errorMessage };
+/* const errorMessage = (err, req, res) => {
   if (err.name === 'Error') {
     res.status(ERR_NOT_FOUND).send({
       message: err.message,
@@ -35,4 +47,4 @@ const errorMessage = (err, req, res) => {
   });
 };
 
-module.exports = { errorMessage };
+module.exports = { errorMessage }; */

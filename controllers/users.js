@@ -2,29 +2,33 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
+const { NotFoundError } = require('../utils/errors/allErrors');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => errorMessage(err, req, res));
+    .catch((err) => errorMessage(err, req, res, next));
 };
 
 module.exports.getUser = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .orFail(() => Error('Пользователь (ID) не найден'))
+    .orFail(() => {
+      throw new NotFoundError('Пользователь (ID) не найден');
+    })
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res, next));
 };
 module.exports.getUserMe = (req, res, next) => {
-  
   User.findById(req.user._id)
-    .orFail(() => Error('Пользователь не найден'))
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
     .then((user) => {
       ////////////
-      /* res.status(200).send(user); */
-      res.send({ data: user });
+      res.status(200).send(user);
+      /* res.send({ data: user }); */
     })
     .catch((err) => errorMessage(err, req, res, next));
 };
@@ -57,7 +61,9 @@ module.exports.updateUserInfo = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .orFail(() => Error('Пользователь не найден'))
+    .orFail(() => {
+      throw new NotFoundError('Пользователь (ID) не найден');
+    })
     .then((user) => res.send({ data: user }))
     .catch((err) => errorMessage(err, req, res, next));
 };
@@ -66,8 +72,11 @@ module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-    .orFail(() => Error('Пользователь не найден'))
-    .then((user) => res.send({ data: user }))
+    .orFail(() => {
+      throw new NotFoundError('Пользователь (ID) не найден');
+    })
+    /* .then((user) => res.send({ data: user })) */
+    .then((user) => res.send(user))
     .catch((err) => errorMessage(err, req, res, next));
 };
 

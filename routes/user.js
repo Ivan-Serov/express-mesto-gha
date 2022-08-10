@@ -4,10 +4,9 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers,
   getUser,
-  getUserMe,
-  createUser,
   updateUserInfo,
   updateUserAvatar,
+  getUserMe,
 } = require('../controllers/users');
 
 router.get('/', getUsers);
@@ -18,7 +17,8 @@ router.get('/:userId',
       id: Joi.string().length(24).hex(),
     }),
   }),
-  getUser);
+  getUser,
+);
 //router.post('/', createUser);
 router.patch('/me', celebrate({
   body: Joi.object().keys({

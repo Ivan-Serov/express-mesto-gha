@@ -17,7 +17,7 @@ const cardSchema = new mongoose.Schema({
         protocols: ['http', 'https'],
         require_protocol: true,
       });
-    }
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

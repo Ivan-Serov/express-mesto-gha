@@ -22,8 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
   next();
 }); */
 
-app.use('/users', require('./routes/user'));
-app.use('/cards', require('./routes/card'));
+
 /* app.post('/signin', login);
 app.post('/signup', createUser); */
 app.post(
@@ -54,6 +53,9 @@ app.post(
 );
 ////
 app.use(auth);
+
+app.use('/users', require('./routes/user'));
+app.use('/cards', require('./routes/card'));
 app.use(errors());
 ///
 app.use((req, res) => {
