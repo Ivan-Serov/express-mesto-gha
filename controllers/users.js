@@ -11,9 +11,9 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  const { id } = req.params;
+  const { UserId } = req.params;
   console.log(req.params);
-  User.findById(id)
+  User.findById(UserId)
     .orFail(() => {
       throw new NotFoundError('Пользователь (ID) не найден');
     })
