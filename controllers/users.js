@@ -4,6 +4,8 @@ const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError } = require('../utils/errors/allErrors');
 
+const { JWT_SECRET = 'dev-key' } = process.env;
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -82,7 +84,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       console.log({ _id: user._id });
