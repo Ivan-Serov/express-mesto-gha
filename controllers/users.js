@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError } = require('../utils/errors/allErrors');
-const { JWT_SECRET } = require('../constants/constants');
+const { JWT_STORAGE_TIME, SALT_LENGTH, JWT_SECRET } = require('../constants/constants');
 
 
 module.exports.getUsers = (req, res, next) => {
@@ -85,7 +85,7 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: '7d',
+        expiresIn: JWT_STORAGE_TIME,
       });
       console.log({ _id: user._id });
       res.send({ token });

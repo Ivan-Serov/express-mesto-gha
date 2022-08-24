@@ -10,9 +10,11 @@ const { auth } = require('./middlewares/auth');
 const { handleError } = require('./middlewares/handleError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3001} = process.env;
-const DB_URL = 'mongodb://127.0.0.1:27017/mestodb';
+const { PORT, DATABASE_URL } = require('./constants/constants');
+
+//const DB_URL = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
+//require('dotenv').config();
 ////
 /* const allowedCors = [
   'localhost:3000',
@@ -71,8 +73,8 @@ app.use((req, res) => {
   res.status(ERR_NOT_FOUND).send({ message: 'Такой страницы не существует' });
 });
 app.use(handleError);
-mongoose.connect(DB_URL, () => {
-  console.log(`Connected to db on ${DB_URL}`);
+mongoose.connect(DATABASE_URL, () => {
+  console.log(`Connected to db on ${DATABASE_URL}`);
 });
 
 app.listen(PORT, () => {
