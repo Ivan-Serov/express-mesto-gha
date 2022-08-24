@@ -2,7 +2,6 @@ const Card = require('../models/card');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError, ForbiddenError } = require('../utils/errors/allErrors');
 
-
 module.exports.getCards = (req, res, next) => {
   Card.find({}).sort({ createdAt: -1 })
     .then((cards) => res.send(cards))

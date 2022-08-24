@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError } = require('../utils/errors/allErrors');
-const { JWT_STORAGE_TIME, SALT_LENGTH, JWT_SECRET } = require('../constants/constants');
-
+const { JWT_STORAGE_TIME, JWT_SECRET } = require('../constants/constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
