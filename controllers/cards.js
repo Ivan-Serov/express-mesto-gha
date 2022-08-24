@@ -2,10 +2,11 @@ const Card = require('../models/card');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError, ForbiddenError } = require('../utils/errors/allErrors');
 
-module.exports.getCards = (req, res) => {
-  Card.find({})
-    .then((cards) => res.send({ data: cards }))
-    .catch((err) => errorMessage(err, req, res));
+module.exports.getCards = (req, res, next) => {
+  Card.find({}).sort({ createdAt: -1 })
+    .then((cards) => res.send(cards))
+    .catch(next);
+    /* .catch((err) => errorMessage(err, req, res)); */
 };
 
 module.exports.getCard = (req, res, next) => {
@@ -13,7 +14,7 @@ module.exports.getCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => errorMessage(err, req, res, next));
 };
 
@@ -50,7 +51,7 @@ module.exports.likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => errorMessage(err, req, res, next));
 };
 

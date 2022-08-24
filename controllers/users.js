@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { errorMessage } = require('../utils/errorMessage');
 const { NotFoundError } = require('../utils/errors/allErrors');
+const { JWT_SECRET } = require('../constants/constants');
 
-const { JWT_SECRET = 'dev-key' } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -88,7 +88,7 @@ module.exports.login = (req, res, next) => {
         expiresIn: '7d',
       });
       console.log({ _id: user._id });
-      res.send({ jwt: token });
+      res.send({ token });
     })
     .catch(next);
 };
